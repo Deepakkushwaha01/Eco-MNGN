@@ -2,32 +2,28 @@ import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import dotenv from "dotenv";
 import { db } from "./Database/Db_Connect.js";
-
+import { createSchema } from "./Graphql/Schema/CreateSchema.js";
 
 const serverInt = async () => {
   try {
     dotenv.config();
     await db();
 
-    // The ApolloServer constructor requires two parameters: your schema
-    // definition and your set of resolvers.
+    const schema = createSchema();
+
     const server = new ApolloServer({
-      typeDefs,
-      resolvers,
+      schema,
     });
 
-    // Passing an ApolloServer instance to the `startStandaloneServer` function:
-    //  1. creates an Express app
-    //  2. installs your ApolloServer instance as middleware
-    //  3. prepares your app to handle incoming requests
     const { url } = await startStandaloneServer(server, {
       listen: { port: 4000 },
     });
 
     console.log(`🚀  Server ready at: ${url}`);
   } catch (error) {
-    throw Error("Error in server starting",error);
+    console.log(error)
+    throw Error("Error in server starting", error);
   }
 };
 
-serverInt()
+serverInt();
