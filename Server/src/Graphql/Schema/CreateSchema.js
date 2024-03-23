@@ -1,14 +1,14 @@
 import { SchemaComposer } from "graphql-compose";
-import User from "./user.js";
+import { createUser, getUser } from "../types/user/user.js";
 export const createSchema = () => {
   const composer = new SchemaComposer();
 
   composer.Query.addFields({
-    users: User,
+    users: getUser,
   });
 
   composer.Mutation.addFields({
-    users: User,
-  })
+    users: createUser,
+  });
   return composer.buildSchema();
 };
